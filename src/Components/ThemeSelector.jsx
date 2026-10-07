@@ -1,9 +1,9 @@
 // lets the user pick the app's color theme; styles are in Pages/Home.css
 import { useState } from 'react';
-import { THEMES, getSavedTheme, applyTheme } from '../Utils/theme';
+import { THEMES, getActiveTheme, applyTheme } from '../Utils/theme';
 
 function ThemeSelector() {
-    const [theme, setTheme] = useState(getSavedTheme);
+    const [theme, setTheme] = useState(getActiveTheme);
 
     function handleChange(event) {
         applyTheme(event.target.value);

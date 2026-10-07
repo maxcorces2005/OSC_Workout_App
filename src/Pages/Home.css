@@ -78,7 +78,7 @@
 .auth-root form{ display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; }
 
 /* auth pages use a smaller button style */
-.auth-begin-button{ background:var(--neon-blue); padding:0.55rem 0.9rem; border-radius:8px; border:none; color:var(--on-accent); cursor:pointer; }
+.auth-begin-button{ background:var(--control-accent); padding:0.55rem 0.9rem; border-radius:8px; border:none; color:var(--on-accent); cursor:pointer; }
 
 /* theme picker in the header (Components/ThemeSelector.jsx) */
 .theme-selector{
@@ -117,7 +117,7 @@
   cursor:pointer;
 }
 .theme-option:has(input:checked){
-  background:var(--neon-blue);
+  background:var(--control-accent);
   color:var(--on-accent);
   font-weight:700;
 }

@@ -1,9 +1,20 @@
-import { THEMES, getSavedTheme, applyTheme } from './theme';
+import { THEMES, getSavedTheme, getActiveTheme, applyTheme } from './theme';
 
 beforeEach(() => {
     localStorage.clear();
     document.documentElement.removeAttribute('data-theme');
 });
+
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
+// makes localStorage throw, like a browser with storage blocked
+function blockStorage(method) {
+    jest.spyOn(Storage.prototype, method).mockImplementation(() => {
+        throw new Error('Storage unavailable');
+    });
+}
 
 test('defaults to dark when nothing is saved', () => {
     expect(getSavedTheme()).toBe('dark');
@@ -35,4 +46,26 @@ test('an unknown theme name is ignored', () => {
 test('a bad saved value falls back to dark', () => {
     localStorage.setItem('osc-theme', 'purple');
     expect(getSavedTheme()).toBe('dark');
+});
+
+test('defaults to dark when reading storage fails', () => {
+    blockStorage('getItem');
+    expect(getSavedTheme()).toBe('dark');
+});
+
+test('applies the theme even when saving fails', () => {
+    blockStorage('setItem');
+    expect(() => applyTheme('light')).not.toThrow();
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+});
+
+test('the active theme is the one on the page, even if it was not saved', () => {
+    blockStorage('setItem');
+    applyTheme('colorblind');
+    expect(getActiveTheme()).toBe('colorblind');
+});
+
+test('the active theme falls back to the saved theme', () => {
+    localStorage.setItem('osc-theme', 'light');
+    expect(getActiveTheme()).toBe('light');
 });

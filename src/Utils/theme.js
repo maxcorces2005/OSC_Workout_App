@@ -14,10 +14,20 @@ function isTheme(value) {
     return THEMES.some((theme) => theme.value === value);
 }
 
-// saved theme, or the default if nothing valid was saved
+// saved theme, or the default if nothing valid was saved or storage is blocked
 export function getSavedTheme() {
-    const saved = localStorage.getItem(THEME_KEY);
-    return isTheme(saved) ? saved : DEFAULT_THEME;
+    try {
+        const saved = localStorage.getItem(THEME_KEY);
+        return isTheme(saved) ? saved : DEFAULT_THEME;
+    } catch {
+        return DEFAULT_THEME;
+    }
+}
+
+// theme currently on the page, which can differ from the saved one if saving failed
+export function getActiveTheme() {
+    const active = document.documentElement.getAttribute('data-theme');
+    return isTheme(active) ? active : getSavedTheme();
 }
 
 // switches every page to the theme and remembers it; unknown names are ignored
@@ -26,5 +36,9 @@ export function applyTheme(value) {
         return;
     }
     document.documentElement.setAttribute('data-theme', value);
-    localStorage.setItem(THEME_KEY, value);
+    try {
+        localStorage.setItem(THEME_KEY, value);
+    } catch {
+        // storage is blocked, so the theme works but won't survive a reload
+    }
 }

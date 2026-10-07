@@ -21,6 +21,8 @@
   --glow-text: #ea1203;
   --glow-button: #1cd34d;
   --on-accent: #ffffff;
+  /* fill for selected buttons; darker than --neon-blue so white text is readable */
+  --control-accent: #0066cc;
 }
 
 [data-theme="light"] {
@@ -42,6 +44,7 @@
   --glow-text: transparent;
   --glow-button: rgba(0, 102, 204, 0.35);
   --on-accent: #ffffff;
+  --control-accent: #0066cc;
 }
 
 /* red-green colorblind (protanopia/deuteranopia): dark base with colors from
@@ -55,6 +58,7 @@
   --glow-text: #e69f00;
   --glow-button: #56b4e9;
   --on-accent: #000000;
+  --control-accent: #56b4e9;
 }
 
 /* Registering the variables as colors lets the browser animate them, so a theme
@@ -75,6 +79,7 @@
 @property --glow-text { syntax: '<color>'; inherits: true; initial-value: transparent; }
 @property --glow-button { syntax: '<color>'; inherits: true; initial-value: transparent; }
 @property --on-accent { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --control-accent { syntax: '<color>'; inherits: true; initial-value: #0066cc; }
 
 :root {
   --theme-fade: 0.4s ease;
@@ -87,7 +92,7 @@
     --shadow var(--theme-fade), --neon-blue var(--theme-fade),
     --neon-red var(--theme-fade), --neon-green var(--theme-fade),
     --glow-text var(--theme-fade), --glow-button var(--theme-fade),
-    --on-accent var(--theme-fade);
+    --on-accent var(--theme-fade), --control-accent var(--theme-fade);
 }
 
 /* respect the OS "reduce motion" setting */
@@ -132,7 +137,7 @@ code {
 }
 
 :where(button):not([class])[aria-pressed="true"] {
-  background: var(--neon-blue);
+  background: var(--control-accent);
   color: var(--on-accent);
 }
 
