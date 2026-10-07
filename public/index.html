@@ -22,6 +22,16 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>OSC Workout</title>
+    <script>
+      // apply the saved theme before the page draws so it doesn't flash dark first
+      // (same key and theme names as src/Utils/theme.js)
+      try {
+        var savedTheme = localStorage.getItem('osc-theme');
+        if (['dark', 'light', 'colorblind'].indexOf(savedTheme) !== -1) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

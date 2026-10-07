@@ -1,3 +1,105 @@
+/* ---------- Themes ----------
+   Every color in the app comes from these variables. The theme is picked by
+   <html data-theme="...">, set from Utils/theme.js (and public/index.html on load).
+   dark is the default and matches the original neon look. */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-top: #021026;
+  --bg-bottom: #000000;
+  --text: #eaf6ff;
+  --text-heading: #ffffff;
+  --text-soft: #cfe8ff;
+  --text-faint: rgba(200, 220, 255, 0.5);
+  --surface: rgba(255, 255, 255, 0.02);
+  --surface-border: rgba(255, 255, 255, 0.04);
+  --shadow: rgba(0, 0, 0, 0.6);
+  --neon-blue: #00a8ff;
+  --neon-red: #ff1e4b;
+  --neon-green: #00e08a;
+  --glow-text: #ea1203;
+  --glow-button: #1cd34d;
+  --on-accent: #ffffff;
+  /* fill for selected buttons; darker than --neon-blue so white text is readable */
+  --control-accent: #0066cc;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg-top: #e6f1fc;
+  --bg-bottom: #ffffff;
+  --text: #0d1b2a;
+  --text-heading: #06111c;
+  --text-soft: #2a4a6b;
+  --text-faint: rgba(13, 27, 42, 0.6);
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-border: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.12);
+  /* darker accents so they keep enough contrast on white */
+  --neon-blue: #0066cc;
+  --neon-red: #c8102e;
+  --neon-green: #00805a;
+  /* neon glow is unreadable on white, so text glow is turned off */
+  --glow-text: transparent;
+  --glow-button: rgba(0, 102, 204, 0.35);
+  --on-accent: #ffffff;
+  --control-accent: #0066cc;
+}
+
+/* red-green colorblind (protanopia/deuteranopia): dark base with colors from
+   the Okabe-Ito palette, so nothing relies on telling red from green.
+   red -> orange, green -> yellow, blue -> sky blue */
+[data-theme="colorblind"] {
+  color-scheme: dark;
+  --neon-blue: #56b4e9;
+  --neon-red: #e69f00;
+  --neon-green: #f0e442;
+  --glow-text: #e69f00;
+  --glow-button: #56b4e9;
+  --on-accent: #000000;
+  --control-accent: #56b4e9;
+}
+
+/* Registering the variables as colors lets the browser animate them, so a theme
+   switch fades smoothly everywhere (even gradients, which can't normally animate).
+   Browsers without @property just switch instantly. */
+@property --bg-top { syntax: '<color>'; inherits: true; initial-value: #021026; }
+@property --bg-bottom { syntax: '<color>'; inherits: true; initial-value: #000000; }
+@property --text { syntax: '<color>'; inherits: true; initial-value: #eaf6ff; }
+@property --text-heading { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --text-soft { syntax: '<color>'; inherits: true; initial-value: #cfe8ff; }
+@property --text-faint { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --surface { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --surface-border { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --shadow { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --neon-blue { syntax: '<color>'; inherits: true; initial-value: #00a8ff; }
+@property --neon-red { syntax: '<color>'; inherits: true; initial-value: #ff1e4b; }
+@property --neon-green { syntax: '<color>'; inherits: true; initial-value: #00e08a; }
+@property --glow-text { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --glow-button { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --on-accent { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
+@property --control-accent { syntax: '<color>'; inherits: true; initial-value: #0066cc; }
+
+:root {
+  --theme-fade: 0.4s ease;
+  accent-color: var(--neon-blue); /* radios, progress bars, checkboxes */
+  transition:
+    --bg-top var(--theme-fade), --bg-bottom var(--theme-fade),
+    --text var(--theme-fade), --text-heading var(--theme-fade),
+    --text-soft var(--theme-fade), --text-faint var(--theme-fade),
+    --surface var(--theme-fade), --surface-border var(--theme-fade),
+    --shadow var(--theme-fade), --neon-blue var(--theme-fade),
+    --neon-red var(--theme-fade), --neon-green var(--theme-fade),
+    --glow-text var(--theme-fade), --glow-button var(--theme-fade),
+    --on-accent var(--theme-fade), --control-accent var(--theme-fade);
+}
+
+/* respect the OS "reduce motion" setting */
+@media (prefers-reduced-motion: reduce) {
+  :root { transition: none; }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +107,46 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  background: radial-gradient(circle at 10% 10%, var(--bg-top) 0%, var(--bg-bottom) 60%) fixed;
+  color: var(--text);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Plain form controls (e.g. the Timer's) follow the theme. Controls that have
+   their own class, like the Home page cards, keep their own styles. */
+:where(button, input, select):not([class]) {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font: inherit;
+}
+
+:where(button, select):not([class]) {
+  cursor: pointer;
+}
+
+:where(button):not([class]):hover:not(:disabled) {
+  border-color: var(--neon-blue);
+}
+
+:where(button):not([class])[aria-pressed="true"] {
+  background: var(--control-accent);
+  color: var(--on-accent);
+}
+
+:where(button, input, select):not([class]):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+:where(button, input, select):focus-visible {
+  outline: 2px solid var(--neon-blue);
+  outline-offset: 2px;
 }

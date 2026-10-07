@@ -3,6 +3,7 @@ import '../App.css';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, getStreak } from '../Utils/streak';
+import ThemeSelector from '../Components/ThemeSelector';
 
 function Home() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Home() {
         <h1 className="neon-title text">OSC's Epic Workout App</h1>
         <p className="neon-subtitle text">Lock in. Gain aura. Save money.</p>
         {user && <p className="neon-subtitle text">🔥 {streak} day streak</p>}
+        <ThemeSelector />
       </header>
 
       <main className="home-main">
